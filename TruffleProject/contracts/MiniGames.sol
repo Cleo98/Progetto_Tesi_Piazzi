@@ -19,7 +19,7 @@ contract MiniGames is Characters {
     
     ///@dev             funzione per settare la variabile randomNumber
     ///@param _number   un numero
-    function _setRandomNumber(uint _number) private onlyOwner {
+    function _setRandomNumber(uint _number) external onlyOwner {
         randomNumber = _number;
     }
 
