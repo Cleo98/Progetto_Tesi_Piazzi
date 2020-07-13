@@ -264,8 +264,8 @@
         ],
         "contractDependencies": [
           417,
-          1540,
-          1643
+          1553,
+          1656
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -274,8 +274,8 @@
         "linearizedBaseContracts": [
           676,
           417,
-          1643,
-          1540
+          1656,
+          1553
         ],
         "name": "Laboratory",
         "nodeType": "ContractDefinition",
@@ -2128,8 +2128,8 @@
         ],
         "contractDependencies": [
           417,
-          1540,
-          1643
+          1553,
+          1656
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -2138,8 +2138,8 @@
         "linearizedBaseContracts": [
           676,
           417,
-          1643,
-          1540
+          1656,
+          1553
         ],
         "name": "Laboratory",
         "nodeType": "ContractDefinition",
@@ -3942,7 +3942,7 @@
   },
   "networks": {},
   "schemaVersion": "3.1.0",
-  "updatedAt": "2020-07-13T09:03:49.207Z",
+  "updatedAt": "2020-07-13T09:53:08.906Z",
   "devdoc": {
     "methods": {
       "createRandomCharacter(string)": {

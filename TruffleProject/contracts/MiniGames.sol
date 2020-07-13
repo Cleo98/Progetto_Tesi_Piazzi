@@ -7,6 +7,7 @@ contract MiniGames is Characters {
     event GameResults(uint id, uint playerGuess, uint result, uint xpScommessi, uint xpTotali);
     event BonusGameResult(uint id, uint xpTotali);
     
+    uint private randomNumber;
     uint restoreTime = 7 days;
     
     ///@dev         controlla che il personaggio che il giocatore vuole utilizzare sia di sua proprietà
@@ -16,6 +17,12 @@ contract MiniGames is Characters {
         _;
     }
     
+    ///@dev             funzione per settare la variabile randomNumber
+    ///@param _number   un numero
+    function _setRandomNumber(uint _number) private onlyOwner {
+        randomNumber = _number;
+    }
+
     ///@dev                 funzione che controlla che il personaggio sia pronto all'utilizzo 
     ///@param _character    il puntatore al personaggio
     function _isReady(Character storage _character) private view returns (bool) {
@@ -69,8 +76,8 @@ contract MiniGames is Characters {
     
     ///@dev         funzione che genera un dado pseudocasuale 
     ///@param _str  un valore che contribuisce alla creazione del dado
-    function _generateRandomDice(uint _str) private view returns (uint) {
-        return uint(keccak256(abi.encodePacked(_str, now, now % 2000))) % 6 + 1;
+    function _generateRandomDice(uint _str) private returns (uint) {
+        return uint(keccak256(abi.encodePacked(_str, now, randomNumber++))) % 6 + 1;
     }
     
     ///@dev                 il primo gioco prevede che il giocatore debba indovinare la somma di due dadi 
