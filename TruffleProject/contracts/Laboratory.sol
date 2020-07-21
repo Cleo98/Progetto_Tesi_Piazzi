@@ -4,6 +4,8 @@ import "./Characters.sol";
 
 contract Laboratory is Characters {
     
+    event LevelUp(uint idCharacter, uint level, uint xp);
+
     modifier checkLevel(uint _level, uint _id) {
         require(book[_id].level < _level);
         _;
@@ -31,13 +33,21 @@ contract Laboratory is Characters {
         
         uint xp_nuovi = 5;
         
-        if(char.xp > 100 * char.level){
-            xp_nuovi = char.xp - 100 * char.level;
+        if(char.xp > 1500 * char.level){
+            xp_nuovi = char.xp - 1500 * char.level;
         }
         
         char.level += 1; 
         char.xp = uint16(xp_nuovi);
+
+        emit LevelUp(_idCharacter, char.level, char.xp);
         
         _evolutionTime(char);
+    }
+
+    ///@dev funzione per la parte di test 
+    function changeXp(uint _idCharacter, uint _xp) public onlyOwner {
+        Character storage char = book[_idCharacter];
+        char.xp += uint16(_xp); 
     }
 }

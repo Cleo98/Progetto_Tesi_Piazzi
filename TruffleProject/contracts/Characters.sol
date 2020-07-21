@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Characters is Ownable {
     
-    event NewCharacter(string name, uint id);
+    event NewCharacter(string name, uint id, uint xp, uint rarity, uint level);
     
     uint cooldownTime = 5 minutes;
     uint creationFee = 0.005 ether; //attualmente equivale a 1 euro
@@ -57,7 +57,7 @@ contract Characters is Ownable {
         book.push(Character(_name, uint32(_id), uint32(now + cooldownTime * 1), 10, uint8(_rarity), 1));
         characterToOwner[_id] = msg.sender; //associa l'id del personaggio all'indirizzo con cui è stato creato 
         ownerCharacterCount[msg.sender]++; //aumenta la quantità di personaggi in possesso per un tale indirizzo
-        emit NewCharacter(_name, _id);
+        emit NewCharacter(_name, _id, 10, _rarity, 1);
     }
     
     ///@dev             funzione che permette al giocatore di creare un personaggio a partire da due personaggi in suo possesso
@@ -67,7 +67,7 @@ contract Characters is Ownable {
     function _createCharacterFromBreeding(string memory _name, uint _firstId, uint _secondId) internal {
         uint idCharacter = _getArrayLength();
         
-        if(idCharacter % (_firstId + _secondId) == 0){
+        if((idCharacter % (_firstId + _secondId)) == 0){
             _createNewCharacter(_name, idCharacter, 5);
         }else{
             _createNewCharacter(_name, idCharacter, _generateRarity(idCharacter));
@@ -108,6 +108,11 @@ contract Characters is Ownable {
             }
         }
         return result;
+    }
+
+    function kill() public onlyOwner {
+    	address payable _owner = address(uint160(owner()));
+    	selfdestruct(_owner);
     }
 
 }
