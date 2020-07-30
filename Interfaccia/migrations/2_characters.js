@@ -1,5 +1,5 @@
-const Characters = artifacts.require("C:/Users/giovanna/Desktop/UNIBG/Tesi_Progetto/TruffleProject/contracts/Characters.sol");
-const Breeding = artifacts.require("C:/Users/giovanna/Desktop/UNIBG/Tesi_Progetto/TruffleProject/contracts/Breeding.sol");
+const Characters = artifacts.require("./contracts/Characters.sol");
+const Breeding = artifacts.require("./contracts/Breeding.sol");
 
 /*module.exports = function(deployer) {
 	deployer.deploy(Characters);
