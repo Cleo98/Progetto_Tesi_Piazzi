@@ -29,12 +29,12 @@
      })*/
       //foam bachelor aisle humor latin assault draw liberty junk arrive destroy forget 
     </script>
-    <script language="javascript" type="text/javascript" src="C:\Users\giovanna\Desktop\UNIBG\Tesi_Progetto\TruffleProject\application\Abis.js"></script>
-    <script language="javascript" type="text/javascript" src="C:\Users\giovanna\Desktop\UNIBG\Tesi_Progetto\TruffleProject\node_modules\web3\dist\web3.min.js"></script>
+    <script language="javascript" type="text/javascript" src=".\TruffleProject\application\Abis.js"></script>
+    <script language="javascript" type="text/javascript" src=".\TruffleProject\node_modules\web3\dist\web3.min.js"></script>
 	</head>
 <body>
   <script>
-    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545")); //collega a Ganache
+    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545")); 
     var userAccount;
     var characters;
     var breeding;
@@ -51,33 +51,13 @@
 
     
     function startApp(){
-      const addressCharacters = "0xd25a2db68495EFA7aE319f2C8E1afD6091f8b796";
+      const addressCharacters = ""; //contract address
       characters = new web3.eth.Contract(abiCharacters, addressCharacters);
       console.log(characters);
-      breeding = new web3.eth.Contract(abiBreeding, "0xAC8c43314021f93D8AB3cDA0F4ac0C8EA4FFd293");
+      breeding = new web3.eth.Contract(abiBreeding, "");
       console.log(breeding);
 
-      userAccount = "0x593eD9cA3fAc01B8a535B40a9AECEF6f0c9Fe558";
-      //userAccount = "0x838d6fdaab2FACc899C8aad6aB447CF5249EFD47";
-      //userAccount = "0xf4EfD8Eb5F3BB69464B5dD2adA83B7e6a2cb0bfC";
-      //userAccount = "0xB29E7AE2735b7f45dfaB05490b7Cc2033B6E0716";
-      //userAccount = "0xE15C36eF44Bc75442140D3d30013fC7f107F9BbC"
-      
-
-      /*var accountInterval = setInterval(function() {
-          // Check if account has changed
-          if (web3.eth.accounts[1] !== userAccount) {
-            userAccount = web3.eth.accounts[1];
-            console.log(userAccount);
-            // Call a function to update the UI with the new account
-            getCharactersByOwner(userAccount)
-            .then(displayCharacters);
-          }
-        }, 100);*/
-
-    
-    //https://www.youtube.com/watch?v=u0vhvBHd4Ro
-    //https://www.tutorialrepublic.com/jquery-examples.php 
+      userAccount = ""; 
 
     $(document).ready(function() {
       $("button.generate").click(async() => {
@@ -90,8 +70,8 @@
         //alert(name); 
         getCharactersByOwner(userAccount)
             .then(displayCharacters);
-        console.log(await characters.methods.characterToOwner(1).call({from: userAccount}));
-        console.log(await breeding.methods.characterToOwner(1).call({from: userAccount}));
+        console.log(await characters.methods.characterToOwner(1).call({from: userAccount})); //Questo viene letto correttamente
+        console.log(await breeding.methods.characterToOwner(1).call({from: userAccount})); //Questo è undefined oppure nullo
         characters.getPastEvents(
           'NewCharacter', {
             fromBlock: 0, 
@@ -104,46 +84,15 @@
         var firstId = campi.eq(0).val();
         var secondId = campi.eq(1).val();
         var name = campi.eq(2).val();
-        //console.log(await breeding.methods.book(firstId).call({from: userAccount}));
-        //try{
+       
+        try{
           await breeding.methods.crossBreeding(Number(firstId), Number(secondId), name).send({from: userAccount});
-        //}catch{
-          //alert("Spero tu stia usando i tuoi personaggi... ma ricordati che devono essere pronti");
-        //}
+        }catch{ //da sempre errore perchè non riesce a leggere characterToOwner 
+          alert("Spero tu stia usando i tuoi personaggi... ma ricordati che devono essere pronti");
+        }
       }) })
-
-    
-
-    /*$(document).ready(function() {
-      $("button.breed").click(async() => {
-        var campi = $(".breedField");
-        var firstId = campi.eq(0).val();
-        var secondId = campi.eq(1).val();
-        var name = campi.eq(2).val();
-        //try{
-          await breeding.methods.crossBreeding(firstId, secondId, name).send({from: userAccount, gas: 1000000});
-        //}catch{
-          //alert("Spero tu stia usando i tuoi personaggi... ma ricordati che devono essere pronti");
-        //}
-        getCharactersByOwner(userAccount)
-            .then(displayCharacters);
-      })
-    })*/
-               
-        
-      
-
-     /* const address = "0x1ae56313fA76dAca2BEd08BDAfD7B11660d4F11E";
-      web3.eth.getBalance(address, (err, wei) => {
-        var balance = web3.utils.fromWei(wei, 'ether')
-        //alert(balance);
-      }) */
-
-      //creazione di un'istanza per il contratto 
     
   }  
-
-  //getCharactersByOwner(userAccount).then(displayCharacters);
 
       function getCharactersByOwner(owner) {
         return characters.methods.getCharactersByOwner(owner).call();
