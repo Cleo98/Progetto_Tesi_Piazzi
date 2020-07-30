@@ -4,18 +4,221 @@
 		<title>Character's App</title>
 		<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script type="text/javascript">
-      window.addEventListener('load', () => {
+     /*window.addEventListener('load', async() => {
+      if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        try {
+            // Request account access if needed
+            console.log("window.ethereum");
+            ethereum.enable();
+        } catch (error) {
+            // User denied account access...
+        }
+    }
+    // Legacy dapp browsers...
+    else if (window.web3) {
+        window.web3 = new Web3(web3.currentProvider);
+        console.log("window.currentProvider");
+        // Acccounts always exposed
+
+    }
+    // Non-dapp browsers...
+    else {
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+     })*/
+      //foam bachelor aisle humor latin assault draw liberty junk arrive destroy forget 
+    </script>
+    <script language="javascript" type="text/javascript" src="C:\Users\giovanna\Desktop\UNIBG\Tesi_Progetto\TruffleProject\application\Abis.js"></script>
+    <script language="javascript" type="text/javascript" src="C:\Users\giovanna\Desktop\UNIBG\Tesi_Progetto\TruffleProject\node_modules\web3\dist\web3.min.js"></script>
+	</head>
+<body>
+  <script>
+    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545")); //collega a Ganache
+    var userAccount;
+    var characters;
+    var breeding;
+
+    window.addEventListener('load', async() => {
         if(typeof(web3) !== 'undefined') {
+          web3 = new Web3(web3.currentProvider);
           console.log("Metamask is installed");
+          startApp();
         }else {
           console.log("Can't find Metamask");
         }
-      })  
+      }) 
+
+    
+    function startApp(){
+      const addressCharacters = "0xd25a2db68495EFA7aE319f2C8E1afD6091f8b796";
+      characters = new web3.eth.Contract(abiCharacters, addressCharacters);
+      console.log(characters);
+      breeding = new web3.eth.Contract(abiBreeding, "0xAC8c43314021f93D8AB3cDA0F4ac0C8EA4FFd293");
+      console.log(breeding);
+
+      userAccount = "0x593eD9cA3fAc01B8a535B40a9AECEF6f0c9Fe558";
+      //userAccount = "0x838d6fdaab2FACc899C8aad6aB447CF5249EFD47";
+      //userAccount = "0xf4EfD8Eb5F3BB69464B5dD2adA83B7e6a2cb0bfC";
+      //userAccount = "0xB29E7AE2735b7f45dfaB05490b7Cc2033B6E0716";
+      //userAccount = "0xE15C36eF44Bc75442140D3d30013fC7f107F9BbC"
+      
+
+      /*var accountInterval = setInterval(function() {
+          // Check if account has changed
+          if (web3.eth.accounts[1] !== userAccount) {
+            userAccount = web3.eth.accounts[1];
+            console.log(userAccount);
+            // Call a function to update the UI with the new account
+            getCharactersByOwner(userAccount)
+            .then(displayCharacters);
+          }
+        }, 100);*/
+
+    
+    //https://www.youtube.com/watch?v=u0vhvBHd4Ro
+    //https://www.tutorialrepublic.com/jquery-examples.php 
+
+    $(document).ready(function() {
+      $("button.generate").click(async() => {
+        var name = $("#name").val(); 
+        try{
+          await characters.methods.createRandomCharacter(name).send({from: userAccount, value: 5000000000000000, gas: 300000}); 
+        }catch{
+          alert("Hai già due personaggi! Per produrne di nuovi devi usare la sezione di breeding");
+        }
+        //alert(name); 
+        getCharactersByOwner(userAccount)
+            .then(displayCharacters);
+        console.log(await characters.methods.characterToOwner(1).call({from: userAccount}));
+        console.log(await breeding.methods.characterToOwner(1).call({from: userAccount}));
+        characters.getPastEvents(
+          'NewCharacter', {
+            fromBlock: 0, 
+            toBlock: 'latest'
+          }, (err, events) => { 
+            console.log(events) } ) }) 
+
+      $("button.breed").click(async() => {
+        var campi = $(".breedField");
+        var firstId = campi.eq(0).val();
+        var secondId = campi.eq(1).val();
+        var name = campi.eq(2).val();
+        //console.log(await breeding.methods.book(firstId).call({from: userAccount}));
+        //try{
+          await breeding.methods.crossBreeding(Number(firstId), Number(secondId), name).send({from: userAccount});
+        //}catch{
+          //alert("Spero tu stia usando i tuoi personaggi... ma ricordati che devono essere pronti");
+        //}
+      }) })
+
+    
+
+    /*$(document).ready(function() {
+      $("button.breed").click(async() => {
+        var campi = $(".breedField");
+        var firstId = campi.eq(0).val();
+        var secondId = campi.eq(1).val();
+        var name = campi.eq(2).val();
+        //try{
+          await breeding.methods.crossBreeding(firstId, secondId, name).send({from: userAccount, gas: 1000000});
+        //}catch{
+          //alert("Spero tu stia usando i tuoi personaggi... ma ricordati che devono essere pronti");
+        //}
+        getCharactersByOwner(userAccount)
+            .then(displayCharacters);
+      })
+    })*/
+               
+        
+      
+
+     /* const address = "0x1ae56313fA76dAca2BEd08BDAfD7B11660d4F11E";
+      web3.eth.getBalance(address, (err, wei) => {
+        var balance = web3.utils.fromWei(wei, 'ether')
+        //alert(balance);
+      }) */
+
+      //creazione di un'istanza per il contratto 
+    
+  }  
+
+  //getCharactersByOwner(userAccount).then(displayCharacters);
+
+      function getCharactersByOwner(owner) {
+        return characters.methods.getCharactersByOwner(owner).call();
+      }
+
+      function getCharacterDetails(id) {
+        return characters.methods.book(id).call();
+      }
+
+      function displayCharacters(ids) {
+        $("#charactersList").empty();
+        for (id of ids) {
+          getCharacterDetails(id)
+          .then(function(character) {
+            $("#charactersList").append(`<div class="character">
+              <ul>
+                <li>Name: ${character.name}</li>
+                <li>Id: ${character.id}</li>
+                <li>Ready Time: ${character.readyTime}</li>
+                <li>Xp: ${character.xp}</li>
+                <li>Rarity: ${character.rarity}</li>
+                <li>Level: ${character.level}</li>
+              </ul>
+            </div>`);
+          });
+        }
+      }
+  </script>
+
+    Non hai ancora due personaggi? Clicca qui per generarne uno nuovo e iniziare a giocare!
+		<form>
+      <label>Name: <input type="text" id="name"></label> 
+      <button type="button" class="generate">Genera personaggio</button>
+    </form>	
+
+    I tuoi personaggi:
+    <div id="charactersList"></div>
+
+    <script type="text/javascript">
+      
     </script>
-    <script language="javascript" type="text/javascript" src=".\TruffleProject\application\Abis.js"></script>
-	</head>
 
-	<body>
+    Breeding section
+    <form>
+      <label>First Character's id: <input type="text" class="breedField"></label>
+      <label>Second Character's id: <input type="text" class="breedField"></label>
+      <label>Nome del nuovo personaggio: <input type="text" class="breedField"></label> 
+      <button type="button" class="breed">Breed</button>
+    </form>
 
-	</body>
+    Minigames section
+    Classic
+    <form>
+      <label>Character's id: <input type="text" id="player"></label>
+      <label>Minigame: </label>
+      <select>
+        <option>SumDice</option>
+        <option>FightDice</option>
+        <option>Pari o dispari?</option>
+        <option>Higher or lower?</option>
+      </select>
+      <button type="button" class="play">Gioca</button>
+    </form>
+    Emergency
+    Give Away
+
+    Vuoi far evolvere il tuo personaggio?
+    <form>
+      <input type="submit" value="Alla sezione Laboratorio">
+    </form>
+
+    Devi scambiare un personaggio?
+    <form>
+      <input type="submit" value="Alla sezione Exchange">
+    </form>
+
+	</body> 
 </html>
